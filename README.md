@@ -98,6 +98,7 @@ sudo systemctl enable jupyter
 sudo systemctl start jupyter
 # Jupyter 서비스 상태 확인하기
 sudo systemctl status jupyter
+# 오류 발생시 jupyter_notebook_config.py에서 IP 주소 확인하기
 # Jupyter 서비스 재시작 방법
 sudo systemctl restart jupyter
 ```
@@ -118,5 +119,32 @@ docker pull hello-world
 docker images
 docker run hello-world
 docker ps -a
-docker rm [Container ID]
+docker rm {Container ID}
+# 모든 컨테이너 삭제
+docker rm -f `docker ps -a -q`
+# 실행 중인 도커 접속
+docker attach {Container ID}
+```
+## [부록] Dockerfile 작성하기
+```
+# Dockerfile 만들기
+mkdir /home/ubuntu/example
+sudo vi /home/ubuntu/example/Dockerfile
+# Dockerfile 작성하기
+FROM ubuntu:18.04
+MAINTAINER Dongbin Na <ndb796@naver.com>
+
+RUN apt-get update
+RUN apt-get install -y apache2
+
+EXPOSE 80
+
+CMD ["apachectl", "-D", "FOREGROUND"]
+# Dockerfile 빌드하기
+cd /home/ubuntu/example
+docker build -t example .
+docker images
+docker run -p 80:80 example
+* [인바운드] - [편집] - [규칙 추가] - [사용자 지정 TCP] - [80]번 포트 열기 - 허용 IP로 [0.0.0.0/0] 설정
+* (http://{Host}:80) 같은 형태로 웹 사이트 접속
 ```
