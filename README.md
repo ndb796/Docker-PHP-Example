@@ -74,6 +74,33 @@ c.NotebookApp.certfile = u'/home/ubuntu/ssl/cert.pem'
 c.NotebookApp.keyfile = u'/home/ubuntu/ssl/cert.key'
 ```
 * (https://{Host}:8888) 같은 형태로 주피터 노트북에 접속
+## [부록] Jupyter Notebook을 시스템 서비스로 등록하기
+```
+# 실행 중인 Jupyter 서버 종료하기
+# jupyter-notebook 실행 파일 경로 찾기
+which jupyter-notebook
+# jupyter.service 작성하기
+sudo vi /etc/systemd/system/jupyter.service
+# Jupyter Notebook 서비스 작성하기
+[Unit]
+Description=Jupyter Notebook Server
+
+[Service]
+Type=simple
+User=ubuntu
+ExecStart=/usr/bin/sudo /usr/local/bin/jupyter-notebook --allow-root --config=/home/ubuntu/.jupyter/jupyter_notebook_config.py
+
+[Install]
+WantedBy=multi-user.target
+# Jupyter 서비스 구동시키기
+sudo systemctl daemon-reload
+sudo systemctl enable jupyter
+sudo systemctl start jupyter
+# Jupyter 서비스 상태 확인하기
+sudo systemctl status jupyter
+# Jupyter 서비스 재시작 방법
+sudo systemctl restart jupyter
+```
 ## [부록] Docker 설치하기 (Ubuntu 18.04)
 ```
 # 시작하기 전에 볼륨 크기 넉넉하게 만들기
