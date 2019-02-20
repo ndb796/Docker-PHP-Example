@@ -148,3 +148,26 @@ docker run -p 80:80 example
 * [인바운드] - [편집] - [규칙 추가] - [사용자 지정 TCP] - [80]번 포트 열기 - 허용 IP로 [0.0.0.0/0] 설정
 * (http://{Host}:80) 같은 형태로 웹 사이트 접속
 ```
+## [부록] PHP 추가하기
+```
+# Dockerfile 수정하기
+sudo vi /home/ubuntu/example/Dockerfile
+# Dockerfile 작성하기
+FROM ubuntu:18.04
+MAINTAINER Dongbin Na <ndb796@naver.com>
+
+RUN apt-get update
+RUN apt-get install -y apache2 # Install Apache web server (Only 'Yes')
+RUN apt-get install -y php5.6 # Install PHP 5.6
+
+EXPOSE 80
+
+CMD ["apachectl", "-D", "FOREGROUND"]
+# Dockerfile 빌드하기
+cd /home/ubuntu/example
+docker build -t example .
+docker images
+docker run -p 80:80 -v /home/ubuntu/example/html:/var/www/html example
+* [인바운드] - [편집] - [규칙 추가] - [사용자 지정 TCP] - [80]번 포트 열기 - 허용 IP로 [0.0.0.0/0] 설정
+* (http://{Host}:80) 같은 형태로 웹 사이트 접속
+```
