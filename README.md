@@ -122,6 +122,8 @@ docker ps -a
 docker rm {Container ID}
 # 모든 컨테이너 삭제
 docker rm -f `docker ps -a -q`
+# 모든 이미지 삭제
+docker rmi -f `docker images`
 # 실행 중인 도커 접속
 docker attach {Container ID}
 ```
@@ -168,6 +170,7 @@ cd /home/ubuntu/example
 docker build -t example .
 docker images
 docker run -p 80:80 -v /home/ubuntu/example/html:/var/www/html example
+# /home/ubuntu/example/html에 웹 문서 생성하기
 * [인바운드] - [편집] - [규칙 추가] - [사용자 지정 TCP] - [80]번 포트 열기 - 허용 IP로 [0.0.0.0/0] 설정
 * (http://{Host}:80) 같은 형태로 웹 사이트 접속
 ```
