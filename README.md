@@ -137,9 +137,9 @@ FROM ubuntu:18.04
 MAINTAINER Dongbin Na <ndb796@naver.com>
 
 RUN apt-get update
-RUN apt-get install -y apache2
+RUN apt-get install -y apache2 # Install Apache web server (Only 'Yes')
 
-EXPOSE 80
+EXPOSE 80 # Open HTTP Port
 
 CMD ["apachectl", "-D", "FOREGROUND"]
 # Dockerfile 빌드하기
@@ -162,7 +162,7 @@ RUN apt-get update
 RUN apt-get install -y apache2 # Install Apache web server (Only 'Yes')
 RUN apt-get install -y php5.6 # Install PHP 5.6
 
-EXPOSE 80
+EXPOSE 80 # Open HTTP Port
 
 CMD ["apachectl", "-D", "FOREGROUND"]
 # Dockerfile 빌드하기
