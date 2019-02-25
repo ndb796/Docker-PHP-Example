@@ -180,7 +180,6 @@ docker run -p 80:80 -v /home/ubuntu/example/html:/var/www/html example
 cd /home/ubuntu/example/html
 sudo vi index.php
 # index.php 작업하기
-
 * [인바운드] - [편집] - [규칙 추가] - [사용자 지정 TCP] - [80]번 포트 열기 - 허용 IP로 [0.0.0.0/0] 설정
 * (http://{Host}:80) 같은 형태로 웹 사이트 접속
 ```
@@ -205,10 +204,16 @@ docker inspect c39cbb65388e
 # 비밀번호: password
 SHOW DATABASES;
 # 접속 확인 및 [exit] 명령어로 나가기
+# 외부 접속을 위한 MySQL 계정 생성
+docker exec -it {Container ID} /bin/bash
+mysql -u root -p
+# 비밀번호: password
+use mysql;
+CREATE USER 'test'@'%' IDENTIFIED BY 'password'; # DB 비밀번호 설정
+GRANT ALL PRIVILEGES ON *.* TO 'test'@'%'; # 외부 접속이 가능하도록 설정
+FLUSH PRIVILEGES;
+# 권한 설정 및 [exit] 명령어로 나가기
+docker restart {Container ID}
+* [인바운드] - [편집] - [규칙 추가] - [사용자 지정 TCP] - [9876]번 포트 열기 - 허용 IP로 [0.0.0.0/0] 설정
+* 외부에서 MySQL 접속 도구를 이용해 [test] 계정으로 [9876] 포트에 접속하는 경우 정상적으로 접속 성공 (MySQL Workbench의 경우 오류 발생 가능)
 ```
-
-snap install docker
-docker-machine ip
-
-
-9876 포트 열기
