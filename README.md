@@ -158,11 +158,17 @@ sudo vi /home/ubuntu/example/Dockerfile
 FROM ubuntu:18.04
 MAINTAINER Dongbin Na <ndb796@naver.com>
 
+# Avoiding user interaction with tzdata
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get update
 RUN apt-get install -y apache2 # Install Apache web server (Only 'Yes')
+RUN apt-get install -y software-properties-common # For Installing add-get-repository
+RUN add-apt-repository -y ppa:ondrej/php # For Installing PHP 5.6
+RUN apt-get update
 RUN apt-get install -y php5.6 # Install PHP 5.6
 
-EXPOSE 80 # Open HTTP Port
+EXPOSE 80
 
 CMD ["apachectl", "-D", "FOREGROUND"]
 # Dockerfile 빌드하기
@@ -171,6 +177,38 @@ docker build -t example .
 docker images
 docker run -p 80:80 -v /home/ubuntu/example/html:/var/www/html example
 # /home/ubuntu/example/html에 웹 문서 생성하기
+cd /home/ubuntu/example/html
+sudo vi index.php
+# index.php 작업하기
+
 * [인바운드] - [편집] - [규칙 추가] - [사용자 지정 TCP] - [80]번 포트 열기 - 허용 IP로 [0.0.0.0/0] 설정
 * (http://{Host}:80) 같은 형태로 웹 사이트 접속
 ```
+## [부록] MySQL 추가하기
+```
+# MySQL 설치 및 실행
+docker run -d -p 9876:3306 -e MYSQL_ROOT_PASSWORD=password mysql
+# Docker Container ID 확인
+docker ps -a
+# Docker MySQL 컨테이너 접속 및 MySQL 동작 확인
+docker exec -it {Container ID} /bin/bash
+mysql -u root -p
+# 비밀번호: password
+CREATE DATABASE TEST;
+SHOW DATABASES;
+# 접속 확인 및 [exit] 명령어로 나가기
+# Docker Container IP 확인
+docker inspect c39cbb65388e
+# Docker MySQL 컨테이너 접속 및 MySQL 동작 확인
+# 1) mysql -u root -p --host {Container IP} --port 3306
+# 2) mysql -u root -p --host 127.0.0.1 --port 9876
+# 비밀번호: password
+SHOW DATABASES;
+# 접속 확인 및 [exit] 명령어로 나가기
+```
+
+snap install docker
+docker-machine ip
+
+
+9876 포트 열기
