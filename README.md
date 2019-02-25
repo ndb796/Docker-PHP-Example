@@ -1,4 +1,4 @@
-## Dokcer PHP Example
+## Docker PHP Example
 > 도커 설치부터 PHP 개발까지 다루는 예제
 ## AWS 인스턴스 생성 및 시작
 1. AWS EC2 관리 페이지로 이동: [EC2 관리 페이지](https://ap-northeast-2.console.aws.amazon.com/ec2/v2/home)
@@ -180,13 +180,14 @@ docker run -p 80:80 -v /home/ubuntu/example/html:/var/www/html example
 cd /home/ubuntu/example/html
 sudo vi index.php
 # index.php 작업하기
+<?php phpinfo(); ?>
 * [인바운드] - [편집] - [규칙 추가] - [사용자 지정 TCP] - [80]번 포트 열기 - 허용 IP로 [0.0.0.0/0] 설정
 * (http://{Host}:80) 같은 형태로 웹 사이트 접속
 ```
 ## [부록] MySQL 추가하기
 ```
 # MySQL 설치 및 실행
-docker run -d -p 9876:3306 -e MYSQL_ROOT_PASSWORD=password mysql
+docker run -d -p 9876:3306 -e MYSQL_ROOT_PASSWORD=password mysql:5.6
 # Docker Container ID 확인
 docker ps -a
 # Docker MySQL 컨테이너 접속 및 MySQL 동작 확인
@@ -216,4 +217,57 @@ FLUSH PRIVILEGES;
 docker restart {Container ID}
 * [인바운드] - [편집] - [규칙 추가] - [사용자 지정 TCP] - [9876]번 포트 열기 - 허용 IP로 [0.0.0.0/0] 설정
 * 외부에서 MySQL 접속 도구를 이용해 [test] 계정으로 [9876] 포트에 접속하는 경우 정상적으로 접속 성공 (MySQL Workbench의 경우 오류 발생 가능)
+```
+## [부록] PHP MySQL 연동하기
+```
+# Dockerfile 수정하기
+sudo vi /home/ubuntu/example/Dockerfile
+# Dockerfile 작성하기
+FROM ubuntu:18.04
+MAINTAINER Dongbin Na <ndb796@naver.com>
+
+# Avoiding user interaction with tzdata
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install Apache Web Server
+RUN apt-get update
+RUN apt-get install -y apache2 # Install Apache web server (Only 'Yes')
+
+# Install PHP 5.6
+RUN apt-get install -y software-properties-common # For Installing add-get-repository
+RUN add-apt-repository -y ppa:ondrej/php # For Installing PHP 5.6
+RUN apt-get update
+RUN apt-get install -y php5.6 # Install PHP 5.6
+
+# Connect PHP & MySQL
+RUN apt-get install -y php5.6-mysql
+
+EXPOSE 80
+
+CMD ["apachectl", "-D", "FOREGROUND"]
+# Dockerfile 빌드하기
+cd /home/ubuntu/example
+docker build -t example .
+docker images
+docker run -p 80:80 -v /home/ubuntu/example/html:/var/www/html example
+# /home/ubuntu/example/html에 웹 문서 생성하기
+cd /home/ubuntu/example/html
+sudo vi index.php
+# index.php 작업하기
+<?php
+$conn = mysqli_connect(
+  '{데이터베이스 IP}',
+  'test',
+  'password',
+  'TEST',
+  '9876');
+if (mysqli_connect_errno())
+{
+  echo "Failed to connect to MySQL: " . mysqli_connect_error();
+}
+$sql = "SELECT VERSION()";
+$result = mysqli_query($conn, $sql);
+var_dump($result->num_rows);
+?>
+# 웹 사이트 접속 및 결과 확인
 ```
