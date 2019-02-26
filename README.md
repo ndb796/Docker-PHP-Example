@@ -365,3 +365,22 @@ git push
 * [회원가입] - [로그인] - [Create Repository]
 * [Name]으로 'docker-php' - [Visibility]로 Private 선택 - [Build Settings]에서 'GitHub' 선택 이후에 'Docker-PHP' Repository 선택 - [Create & Build]
 * DockerHub와 GitHub가 연동되었으므로 이제부터 프로젝트 소스코드가 변경되어 Git Push가 발생하면 자동으로 Docker Build 진행
+## [부록] GitHub에 README 추가하기
+* 자신의 Private GitHub Repository로 이동 - [Add a README]
+```
+## Docker PHP
+### Installation
+<pre>
+cd /home
+git clone https://github.com/ndb796/Docker-PHP
+cd Docker-PHP
+</pre>
+### Run
+<pre>
+# Login For Private Docker Repository
+docker login
+docker pull ndb796/docker-php
+docker run -p 80:80 -v /home/Docker-PHP/Project:/var/www/html ndb796/docker-php
+</pre>
+```
+* 실제로 해당 README 내용에 따라서 완성된 Docker 프로젝트 구동시키기
