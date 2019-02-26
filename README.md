@@ -384,10 +384,10 @@ docker run -p 80:80 -v /home/Docker-PHP/Project:/var/www/html ndb796/docker-php
 </pre>
 ```
 * 실제로 해당 README 내용에 따라서 완성된 Docker 프로젝트 구동시키기
-## [실습] Jenkins
+## [실습] Jenkins 설치
 ```
 docker pull jenkins
-docker run -d -p 8080:8080 -v /home/jenkins:/var/jenkins_home -u root jenkins
+docker run -d -p 8080:8080 -v /home/jenkins:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker -u root jenkins
 # 실행 중인 Jenkins 확인
 docker ps -a
 # Jenkins 로그를 열어 비밀번호 확인하기
