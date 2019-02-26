@@ -302,3 +302,61 @@ print_r($row["VERSION()"]);
 ?>
 # 웹 사이트 접속 및 결과 확인시 MySQL 버전인 5.6 출력
 ```
+## [부록] GitHub와 DockerHub 연동하기
+* [깃 허브](https://github.com/) 접속하기
+* [New Repository] - Repository Name으로 'Docker-PHP' 넣기 - [Private]으로 생성
+```
+cd C:\Docker Study
+git clone https://github.com/ndb796/Docker-PHP.git
+# 이후에 'Docker-PHP' 폴더에 Dockerfile 생성하기
+# Dockerfile 수정하기
+sudo vi /home/ubuntu/example/Dockerfile
+# Dockerfile 작성하기
+FROM ubuntu:18.04
+MAINTAINER Dongbin Na <ndb796@naver.com>
+
+# Avoiding user interaction with tzdata
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install Apache Web Server
+RUN apt-get update
+RUN apt-get install -y apache2 # Install Apache web server (Only 'Yes')
+
+# Install PHP 5.6
+RUN apt-get install -y software-properties-common # For Installing add-get-repository
+RUN add-apt-repository -y ppa:ondrej/php # For Installing PHP 5.6
+RUN apt-get update
+RUN apt-get install -y php5.6 # Install PHP 5.6
+
+# Connect PHP & MySQL
+RUN apt-get install -y php5.6-mysql
+
+EXPOSE 80
+
+CMD ["apachectl", "-D", "FOREGROUND"]
+# 이후에 'Docker-PHP' 폴더에 Project 폴더 생성하기
+# Project 폴더에 index.php 생성하기
+# index.php 작업하기
+<?php
+$conn = mysqli_connect(
+  '{Host 엔드 포인트 주소}',
+  'user',
+  '{DB 비밀번호}',
+  'TEST',
+  '3306');
+if (mysqli_connect_errno())
+{
+  echo "Failed to connect to MySQL: " . mysqli_connect_error();
+}
+$sql = "SELECT VERSION()";
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_array($result);
+print_r($row["VERSION()"]);
+?>
+# 작성한 소스코드를 깃에 올리기
+cd C:\Docker Study\Docker-PHP
+git add .
+git commit -m "초기 프로젝트 구성"
+git push
+# 이후에 자신의 Private Repository에서 소스코드 확인
+```
