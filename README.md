@@ -364,3 +364,4 @@ git push
 * [도커 허브](https://hub.docker.com/) 접속하기
 * [회원가입] - [로그인] - [Create Repository]
 * [Name]으로 'docker-php' - [Visibility]로 Private 선택 - [Build Settings]에서 'GitHub' 선택 이후에 'Docker-PHP' Repository 선택 - [Create & Build]
+* DockerHub와 GitHub가 연동되었으므로 이제부터 프로젝트 소스코드가 변경되어 Git Push가 발생하면 자동으로 Docker Build 진행
