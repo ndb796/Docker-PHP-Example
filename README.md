@@ -302,7 +302,7 @@ print_r($row["VERSION()"]);
 ?>
 # 웹 사이트 접속 및 결과 확인시 MySQL 버전인 5.6 출력
 ```
-## [부록] GitHub와 DockerHub 연동하기
+## [부록] GitHub에 소스코드 올리기
 * [깃 허브](https://github.com/) 접속하기
 * [New Repository] - Repository Name으로 'Docker-PHP' 넣기 - [Private]으로 생성
 ```
@@ -360,3 +360,7 @@ git commit -m "초기 프로젝트 구성"
 git push
 # 이후에 자신의 Private Repository에서 소스코드 확인
 ```
+## [부록] DockerHub와 GitHub 연동하기
+* [도커 허브](https://hub.docker.com/) 접속하기
+* [회원가입] - [로그인] - [Create Repository]
+* [Name]으로 'docker-php' - [Visibility]로 Private 선택 - [Build Settings]에서 'GitHub' 선택 이후에 'Docker-PHP' Repository 선택 - [Create & Build]
