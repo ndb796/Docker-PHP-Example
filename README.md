@@ -272,3 +272,33 @@ print_r($row["VERSION()"]);
 ?>
 # 웹 사이트 접속 및 결과 확인시 MySQL 버전인 5.6 출력
 ```
+## [부록] AWS RDS를 이용한 데이터베이스 구축
+* [AWS RDS](https://ap-northeast-2.console.aws.amazon.com/rds) 서비스 페이지로 이동하기
+* [파라미터 그룹] - [파라미터 그룹 생성] - MySQL 5.6 선택 이후에 [그룹 이름] 및 [설명]으로 'Hangul-Parameter' 넣기
+* 이후에 [파라미터 편집] - 'char' 검색하여 전부 'utf8'으로 변경 - 'collation' 검색하여 전부 'utf8_general_ci'로 변경
+* [데이터베이스 생성] - [MySQL] - 프리티어로 사용
+* 인스턴스 식별자로 'docker-mysql' 넣기 - 마스터 사용자 이름으로 user 넣기 - 암호 입력하기
+* [퍼블릭 액세스 가능성]을 '예'로 설정 - 데이터베이스 이름은 'TEST'로 생성 - [DB 파라미터 그룹]으로 아까 만든 'Hangul-Parameter' 설정 - [데이터베이스 생성]
+* 생성 완료 이후에 [보안 그룹]에서 누구나 접속할 수 있도록 소스(Source)를 0.0.0.0/0로 넣기
+```
+# 만들어진 AWS RDS를 테스트하기 위한 소스코드 수정
+sudo vi index.php
+# index.php 작업하기
+<?php
+$conn = mysqli_connect(
+  '{Host 엔드 포인트 주소}',
+  'user',
+  '{DB 비밀번호}',
+  'TEST',
+  '3306');
+if (mysqli_connect_errno())
+{
+  echo "Failed to connect to MySQL: " . mysqli_connect_error();
+}
+$sql = "SELECT VERSION()";
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_array($result);
+print_r($row["VERSION()"]);
+?>
+# 웹 사이트 접속 및 결과 확인시 MySQL 버전인 5.6 출력
+```
