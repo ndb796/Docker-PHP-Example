@@ -186,7 +186,7 @@ sudo vi index.php
 ```
 ## [부록] MySQL 추가하기
 ```
-# MySQL 설치 및 실행
+# MySQL 설치 및 실행 (MySQL 5.6이 아니면 오류 발생할 수 있는 예제임)
 docker run -d -p 9876:3306 -e MYSQL_ROOT_PASSWORD=password mysql:5.6
 # Docker Container ID 확인
 docker ps -a
@@ -198,7 +198,7 @@ CREATE DATABASE TEST;
 SHOW DATABASES;
 # 접속 확인 및 [exit] 명령어로 나가기
 # Docker Container IP 확인
-docker inspect c39cbb65388e
+docker inspect {Container ID}
 # Docker MySQL 컨테이너 접속 및 MySQL 동작 확인
 # 1) mysql -u root -p --host {Container IP} --port 3306
 # 2) mysql -u root -p --host 127.0.0.1 --port 9876
@@ -267,7 +267,8 @@ if (mysqli_connect_errno())
 }
 $sql = "SELECT VERSION()";
 $result = mysqli_query($conn, $sql);
-var_dump($result->num_rows);
+$row = mysqli_fetch_array($result);
+print_r($row["VERSION()"]);
 ?>
-# 웹 사이트 접속 및 결과 확인
+# 웹 사이트 접속 및 결과 확인시 MySQL 버전인 5.6 출력
 ```
