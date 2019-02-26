@@ -384,3 +384,14 @@ docker run -p 80:80 -v /home/Docker-PHP/Project:/var/www/html ndb796/docker-php
 </pre>
 ```
 * 실제로 해당 README 내용에 따라서 완성된 Docker 프로젝트 구동시키기
+## [실습] Jenkins
+```
+docker pull jenkins
+docker run -d -p 8080:8080 -v /home/jenkins:/var/jenkins_home -u root jenkins
+# 실행 중인 Jenkins 확인
+docker ps -a
+# Jenkins 로그를 열어 비밀번호 확인하기
+docker logs {Container ID}
+# [8080]번 포트 개방 및 8080 포트로 서버 접속하기
+# 비밀번호 입력 후 Jenkins 설치 진행 - [Install suggested plugins]을 눌러 권장 설치 
+```
