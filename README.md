@@ -401,3 +401,10 @@ docker logs {Container ID}
 * 2-2) [Jenkins 관리] - [Configure Global Security] - [Enable security] 체크 - [Jenkins' own user database] - [사용자의 가입 허용] 체크 - [Save] - 이제 [Manager Users] 사용 가능
 * 2-3) [Jenkins 관리] - [Manage Users] - [관리자 계정 설정] - 비밀번호 변경 - 젠킨스 재시작(도커 컨테이너 지우고 재시작)
 * 2-4) 관리자 계정(admin)으로 로그인 - [Jenkins 관리] - [Configure Global Security] - [Matrix-based security] - [Add user or group...] - 관리자 계정(admin) 입력 - 모든 권한에 체크 - [Save] - 설정
+## [실습] Jenkins Docker 빌드
+* [새 작업] - 이름: [Example] - [Freestyle Proejct]로 생성 - [Build] 탭 - [Execute Shell] - Command 입력
+```
+docker pull ndb796/docker-php
+docker run ndb796/docker-php
+```
+* [저장] - [Build Now] - 새로고침 이후 Build History 확인 - [Console Output] - 결과 
