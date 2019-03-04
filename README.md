@@ -408,3 +408,4 @@ docker pull ndb796/docker-php
 docker run ndb796/docker-php
 ```
 * [저장] - [Build Now] - 새로고침 이후 Build History 확인 - [Console Output] - 결과 
+> https://stackoverflow.com/questions/44850565/docker-not-found-when-building-docker-image-using-docker-jenkins-container-pipel
