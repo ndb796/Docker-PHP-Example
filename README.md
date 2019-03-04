@@ -396,7 +396,7 @@ docker logs {Container ID}
 # 비밀번호 입력 후 Jenkins 설치 진행 - [Install suggested plugins]을 눌러 권장 설치 - 설치 이후 관리자 계정 설정하기
 ```
 ## [실습] Jenkins 관리 기본
-* 1) Jenkins 초기화: /home/jenkins 폴더 삭제 이후 jenkins 컨테이너 재시작
+* Jenkins 초기화: /home/jenkins 폴더 삭제 이후 jenkins 컨테이너 재시작
 * 2-1) Jenkins 비밀번호 분실시: /home/jenkins/config.xml 파일에서 <useSecurity>false</useSecurity>로 변경 - 젠킨스 재시작(도커 컨테이너 지우고 재시작)
 * 2-2) [Jenkins 관리] - [Configure Global Security] - [Enable security] 체크 - [Jenkins' own user database] - [사용자의 가입 허용] 체크 - [Save] - 이제 [Manager Users] 사용 가능
 * 2-3) [Jenkins 관리] - [Manage Users] - [관리자 계정 설정] - 비밀번호 변경 - 젠킨스 재시작(도커 컨테이너 지우고 재시작)
