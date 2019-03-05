@@ -436,3 +436,30 @@ exit
 * Docker Container 명단에 PHP 컨테이너가 추가되어 구동 됨. 이는 Jenkins Container가 생성한 것임.
 * 혹여 Build 내용을 수정하고자 한다면 [X] 버튼을 눌러서 구동을 종료시킨 뒤에 [구성]에서 Build 정보 변경.
 * 결과적으로 웹 서버에 접속해서 결과 확인 가능.
+## [실습] Jenkins 원격으로 빌드 유발하기
+* 기존에 존재하는 Jenkins 실행 상태 [X] 눌러 종료 - PHP Docker 컨테이너 종료.
+* [구성] - [Build] - Command 작성하기
+```
+cd /home/Docker-PHP
+git pull
+docker rm -f php || true
+docker pull ndb796/docker-php
+docker run -p 80:80 -v /home/Docker-PHP/Project:/var/www/html --name php ndb796/docker-php
+```
+* [빌드 유발] - [빌드를 원격으로 유발] - 토큰: [rebuild_token] - [저장]
+* [Jenkins 관리] - [Manage User] - 관리자 계정(admin) 선택 - [설정] - [API Token] - 토큰 값 생성 및 저장.
+* 이제 Git Pull 명령을 위해 Jenkins와 Git 연동.
+```
+1) [GitHub] 접속 - [Settings] - [Developer settings] - [Personal access tokens] - [Generate new token]
+2) 토큰 설명: [jenkins-token] - [repo] 체크 - [admin:repo_hook] 체크 - 생성 - 토큰 복사
+3) Jenkins 컨테이너의 bash 실행.
+cd /home/Docker-PHP
+# GitHub 로그인 정보 저장 만료 시간을 2시간으로 설정
+git config --global credential.helper "cache --timeout 7200"
+# GitHub 계정 입력 및 패스워드로는 액세스 토큰을 입력해서 로그인
+git pull
+# 이후에 한 번 더 Git 명령을 사용할 때는 2시간 동안 재로그인 할 필요 없음
+git pull
+```
+* 브라우저에서 http://admin:{계정 토큰 값}@{IP 주소}:8080/job/Example/build?token=rebuild_token 경로에 접속.
+* 원격으로 빌드가 유발되는 것 확인.
