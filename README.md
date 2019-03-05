@@ -385,9 +385,13 @@ docker run -p 80:80 -v /home/Docker-PHP/Project:/var/www/html ndb796/docker-php
 ```
 * 실제로 해당 README 내용에 따라서 완성된 Docker 프로젝트 구동시키기
 ## [실습] Jenkins 설치
+* Jenkins에서 PHP를 위한 Docker를 구동시키고자 함.
+* 이러한 구조를 Docker in Docker라고 함.
+* Jenkins에서 Docker를 이용하기 위해서는 Jenkins 컨테이너에 Docker가 설치되어 있어야 하고, 호스트와 docker.sock을 공유해야 함.
+* 또한 Jenkins에서 PHP Docker 이미지를 실행하므로 80번 포트도 열어 주어야 함.
 ```
 docker pull jenkins
-docker run -d -p 8080:8080 -v /home/jenkins:/var/jenkins_home -u root jenkins
+docker run -d -p 80:80 -p 8080:8080 -v /home/jenkins:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock -u root jenkins
 # 실행 중인 Jenkins 확인
 docker ps -a
 # Jenkins 로그를 열어 비밀번호 확인하기
@@ -395,7 +399,7 @@ docker logs {Container ID}
 # [8080]번 포트 개방 및 8080 포트로 서버 접속하기
 # 비밀번호 입력 후 Jenkins 설치 진행 - [Install suggested plugins]을 눌러 권장 설치 - 설치 이후 관리자 계정 설정하기
 ```
-## [실습] Jenkins 관리 기본
+## [실습] Jenkins 관리 기본 - 부록
 * Jenkins 초기화: /home/jenkins 폴더 삭제 이후 jenkins 컨테이너 재시작
 * 2-1) Jenkins 비밀번호 분실시: /home/jenkins/config.xml 파일에서 <useSecurity>false</useSecurity>로 변경 - 젠킨스 재시작(도커 컨테이너 지우고 재시작)
 * 2-2) [Jenkins 관리] - [Configure Global Security] - [Enable security] 체크 - [Jenkins' own user database] - [사용자의 가입 허용] 체크 - [Save] - 이제 [Manager Users] 사용 가능
@@ -408,4 +412,23 @@ docker pull ndb796/docker-php
 docker run ndb796/docker-php
 ```
 * [저장] - [Build Now] - 새로고침 이후 Build History 확인 - [Console Output] - 결과 
-> https://stackoverflow.com/questions/44850565/docker-not-found-when-building-docker-image-using-docker-jenkins-container-pipel
+* Docker가 설치되어 있지 않아서 Jenkins 컨테이너에서 Docker를 사용할 수 없음
+```
+# 실행 중인 Jenkins 확인
+docker ps -a
+# 컨테이너에 접속하기
+docker exec -it {Container ID} /bin/bash
+# 컨테이너 내부에 Docker 설치하기
+curl -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-17.04.0-ce.tgz
+tar xzvf docker-17.04.0-ce.tgz
+mv docker/docker /usr/local/bin
+rm -r docker docker-17.04.0-ce.tgz
+# Docker의 원활한 사용을 위해 로그인하기
+docker login
+# 로그인 이후에 컨테이너에서 나오기
+exit
+```
+* [Example] 작업 - 다시 [Build Now] 누르기 - 새로고침 이후 Build History 확인 - [Console Output] - 결과
+* 콘솔 출력이 종료되지 않고 계속 실행 중이라면 서버가 정상적으로 구동 중인 것임.
+* Docker Container 명단에 PHP 컨테이너가 추가되어 구동 됨. 이는 Jenkins Container가 생성한 것임.
+* Build 내용을 수정하기 위해 [X] 버튼 누른 뒤에 [빌드 정보 수정]
