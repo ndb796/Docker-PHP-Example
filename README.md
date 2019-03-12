@@ -462,3 +462,34 @@ git pull
 ```
 * 브라우저에서 http://{IP 주소}:8080/job/Example/build?token=rebuild_token 경로에 접속.
 * 원격으로 빌드가 유발되는 것 확인.
+## Kubernetes 설치
+```
+# 신뢰할 수 있는 APT 키 추가
+sudo apt -y install apt-transport-https curl
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add
+# Kubernetes 설치.
+sudo apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+sudo apt update
+sudo apt install kubelet kubeadm kubectl kubernetes-cni
+# 이 때 /etc/apt/sources.list가 임의로 수정되어 있으면 설치가 불가능할 수 있음
+```
+## Minikube 설치
+```
+curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+chmod +x minikube 
+sudo mv minikube /usr/local/bin/
+minikube version
+minikube start --cpus 4 --memory 4096
+# minikube start에서 VM 관련 오류 발생시 다음 구문 실행
+apt-get install virtualbox
+```
+## apt-get 리스트 초기화
+```
+# sources.list 파일 찾기
+sudo dpkg -S apt | grep sources.list
+# /usr/share/doc/apt/examples/sources.list 위치에서 샘플 발견 (패키지 서버 주소가 적을 수 있음)
+cat /usr/share/doc/apt/examples/sources.list
+# 전체 내용 붙여 넣은 뒤에 update 구문 실행 후에 오류 없음
+sudo vi /etc/apt/sources.list
+sudo apt-get update
+```
