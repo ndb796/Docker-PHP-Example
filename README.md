@@ -479,9 +479,12 @@ curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/miniku
 chmod +x minikube 
 sudo mv minikube /usr/local/bin/
 minikube version
-minikube start --cpus 4 --memory 4096
-# minikube start에서 VM 관련 오류 발생시 다음 구문 실행
-apt-get install virtualbox
+# Minikube 실행
+sudo -i
+minikube start --vm-driver=none
+# minikube start 과정에서 CPU 개수가 부족하다는 오류가 출력되면 다음과 같이 처리.
+kubeadm init --pod-network-cidr=10.244.0.0/16  --ignore-preflight-errors=NumCPU flag
+minikube start --vm-driver=none
 ```
 ## apt-get 리스트 초기화
 ```
