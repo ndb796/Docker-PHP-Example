@@ -462,7 +462,7 @@ git pull
 ```
 * 브라우저에서 http://{IP 주소}:8080/job/Example/build?token=rebuild_token 경로에 접속.
 * 원격으로 빌드가 유발되는 것 확인.
-## Kubernetes 설치
+## Kubernetes 설치 ①
 ```
 # 신뢰할 수 있는 APT 키 추가
 sudo apt -y install apt-transport-https curl
@@ -473,7 +473,25 @@ sudo apt update
 sudo apt install kubelet kubeadm kubectl kubernetes-cni
 # 이 때 /etc/apt/sources.list가 임의로 수정되어 있으면 설치가 불가능할 수 있음
 ```
-## Minikube 설치
+## [부록] apt-get 리스트 초기화 방법
+```
+# sources.list 파일 찾기
+sudo dpkg -S apt | grep sources.list
+# /usr/share/doc/apt/examples/sources.list 위치에서 샘플 발견 (패키지 서버 주소가 적을 수 있음)
+cat /usr/share/doc/apt/examples/sources.list
+# 전체 내용 붙여 넣은 뒤에 update 구문 실행 후에 오류 없음
+sudo vi /etc/apt/sources.list
+sudo apt-get update
+```
+## Kubernetes 설치 ②: 추천
+```
+# 가장 먼저 쿠버네티스의 정상적인 동작을 위해 CPU 및 RAM의 성능을 높일 필요가 있음.
+# 인스턴스를 중지시킨 이후에 t2.medium으로 성능을 높인 뒤에 다시 시작.
+curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
+```
+## Minikube 설치 및 실행 ①
 ```
 curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 chmod +x minikube 
@@ -486,13 +504,29 @@ minikube start --vm-driver=none
 kubeadm init --pod-network-cidr=10.244.0.0/16  --ignore-preflight-errors=NumCPU flag
 minikube start --vm-driver=none
 ```
-## apt-get 리스트 초기화
+## Minikube 설치 및 실행 ②: 추천
 ```
-# sources.list 파일 찾기
-sudo dpkg -S apt | grep sources.list
-# /usr/share/doc/apt/examples/sources.list 위치에서 샘플 발견 (패키지 서버 주소가 적을 수 있음)
-cat /usr/share/doc/apt/examples/sources.list
-# 전체 내용 붙여 넣은 뒤에 update 구문 실행 후에 오류 없음
-sudo vi /etc/apt/sources.list
-sudo apt-get update
+# Minikube 설치하기
+curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
+minikube version
+# Minikube 시작하기
+sudo -i
+minikube start --vm-driver=none
+# 시작하기 위해 5분 이상의 시간이 필요.
+minikube status
+# 예제 컨테이너 구동하기
+kubectl run hello-minikube --image=gcr.io/google_containers/echoserver:1.4 --port=8080
+kubectl expose deployment hello-minikube --type=NodePort
+# 구동된 서비스 확인하기
+kubectl get services
+# 인바운드 포트 열어서 브라우저에서 접속하기
+# 접속 결과 확인하기
+# 서비스 죽이기
+kubectl delete services hello-minikube
+kubectl get services
+# 컨테이너 죽이기
+kubectl delete deployment hello-minikube
+# 미니쿠베 죽이기
+minikube stop
+# 약 1분 뒤에 미니쿠베 
 ```
