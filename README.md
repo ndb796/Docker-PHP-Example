@@ -528,5 +528,5 @@ kubectl get services
 kubectl delete deployment hello-minikube
 # 미니쿠베 죽이기
 minikube stop
-# 약 1분 뒤에 미니쿠베 
+# 약 1분 뒤에 미니쿠베 동작 종료.
 ```
