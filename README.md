@@ -530,3 +530,24 @@ kubectl delete deployment hello-minikube
 minikube stop
 # 약 1분 뒤에 미니쿠베 동작 종료.
 ```
+## Minikube Node.js 예제
+```
+minikube start --vm-driver=none
+# Hello Node 예제를 기반으로 하는 컨테이너 실행.
+kubectl create deployment hello-node --image=gcr.io/hello-minikube-zero-install/hello-node
+# 인터넷에 파드 노출시키기.
+kubectl expose deployment hello-node --type=LoadBalancer --port=8080
+# 생성된 서비스 확인하기.
+kubectl get services
+# 인바운드 설정 및 접속 테스트
+# 클러스터 리소스 제거.
+kubectl delete service hello-node
+kubectl delete deployment hello-node
+# 필요시 가상 머신 정지 및 삭제
+minikube stop
+minikube delete
+```
+## 되는 예제부터
+```
+https://kubernetes.io/ko/docs/tutorials/kubernetes-basics/create-cluster/cluster-intro/
+```
