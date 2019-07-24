@@ -43,7 +43,8 @@ c = get_config()
 c.NotebookApp.password = u'sha1:{해시 값}'
 c.NotebookApp.ip = '{내부 아이피}'
 c.NotebookApp.notebook_dir = '/'
-# 내부 아이피로는 SSH로 접속했을 때 콘솔 창에 나오는 아이피를 입력하기
+# 내부 아이피로는 AWS에 SSH로 접속했을 때 콘솔 창에 나오는 아이피를 입력하기
+# 혹은 사설 Ubuntu 서버를 이용하는 경우 0.0.0.0으로 입력하기 (또한 추가적으로 sudo ufw allow 8888로 방화벽 허용 설정)
 ```
 * jupyter 실행하기
 ```
