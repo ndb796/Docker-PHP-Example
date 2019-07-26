@@ -83,6 +83,7 @@ which jupyter-notebook
 # jupyter.service 작성하기
 sudo vi /etc/systemd/system/jupyter.service
 # Jupyter Notebook 서비스 작성하기
+# AWS가 아니라 일반 Ubuntu 컴퓨터인 경우, User=root로 설정한 뒤에 config 파일의 경로에서도 User 이름 확인하기
 [Unit]
 Description=Jupyter Notebook Server
 
@@ -97,6 +98,7 @@ WantedBy=multi-user.target
 sudo systemctl daemon-reload
 sudo systemctl enable jupyter
 sudo systemctl start jupyter
+# 서비스 상태에서 오류가 발생하는 경우 cat /var/log/syslog로 로그 확인하기
 # Jupyter 서비스 상태 확인하기
 sudo systemctl status jupyter
 # 오류 발생시 jupyter_notebook_config.py에서 IP 주소 확인하기
